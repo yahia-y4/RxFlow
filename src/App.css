@@ -1,3 +1,12 @@
-div{
-    background-color: violet;
+*{
+    margin: 0;
+    user-select: none;
+}
+body{
+    overflow: hidden;
+}
+.app_div{
+   background-color: #041018;
+   height: 1000px;
+   
 }

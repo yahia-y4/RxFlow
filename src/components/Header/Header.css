@@ -1,0 +1,15 @@
+.header_div{
+    border-bottom: 1px solid white;
+    height: 80px;
+    box-shadow: 0px 5px 10px 1px #0d2a3fd7;
+    direction: rtl;
+      position: relative; 
+
+}
+
+.top_icon_div_flex{
+    display: flex;
+    position: absolute;
+    bottom: 0;  
+  
+}
