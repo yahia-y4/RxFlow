@@ -1,7 +1,7 @@
 .header_div{
     border-bottom: 1px solid white;
     height: 80px;
-    box-shadow: 0px 5px 10px 1px #0d2a3fd7;
+    box-shadow: 0px 3px 5px 1px #0d2a3fd7;
     direction: rtl;
       position: relative; 
 
@@ -11,5 +11,6 @@
     display: flex;
     position: absolute;
     bottom: 0;  
+    margin-right: 10px;
   
 }

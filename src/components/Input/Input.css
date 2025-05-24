@@ -1,0 +1,25 @@
+.input_compon {
+    display:flex;
+     
+     width: fit-content;
+   
+     
+}
+
+.input_compon .input_class {
+
+    direction: rtl;
+    background-color: #041018;
+    border: #bcc9cf 1px solid;
+    border-color: #bcc9cf;
+    outline: none;
+    color: #bcc9cf;
+    
+}
+
+.input_compon .label_class {
+
+    margin-left: 10px;
+    color: #bcc9cf;
+    font-size: 20px;
+}

@@ -1,4 +1,6 @@
 .storage_div{
-    background-color: cadetblue;
+    display: flex;
     font-size: 50px;
+    direction: rtl;
+    height: 100%;
 }

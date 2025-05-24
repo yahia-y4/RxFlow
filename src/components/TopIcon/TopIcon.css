@@ -1,11 +1,15 @@
 .top_icon_div{
-  
     font-size: 20px;
     width: 30px;
-    color: white;
-    border: 1px solid white;
-  
+    color: #a8dbdb;
+    border: 1px solid #a8dbdb;
    text-align: center;
-   padding: 7px;
+   padding: 5px;
+   
+}
+
+.top_icon_div :hover{
+        color: #ffffff;
     
 }
+

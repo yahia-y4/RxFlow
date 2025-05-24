@@ -1,0 +1,15 @@
+#right_part_storage_div{
+     border: 1px solid #a8dbdb;
+     width: 30%;
+     height: 100%;
+}
+
+.top_icons_right_flex{
+    display: flex;
+    margin-top: 5px;
+    margin-right: 5px;
+    margin-left: 5px;
+    padding-bottom: 10px;
+   border-bottom: #a8dbdb 1px solid;
+
+}
