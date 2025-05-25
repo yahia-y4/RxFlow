@@ -1,0 +1,12 @@
+.button_class {
+    color: #a8dbdb;
+    border: 1px #a8dbdb solid;
+    font-size: 16px;
+    background-color: #a8dbdb1f;
+}
+
+.button_class:hover {
+    border: 1px #ffffff solid;
+    color: #ffffff;
+    background-color: #a8dbdb5e;
+}

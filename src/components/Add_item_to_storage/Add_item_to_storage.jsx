@@ -1,6 +1,7 @@
 import React from "react";
 import "./Add_item_to_storage.css"
-import Input from "../../components/Input/Input";
+import Input from "../Input/Input";
+import Button from "../Button/Button";
 
 export default function Add_item_to_storage(){
     return(
@@ -17,6 +18,12 @@ export default function Add_item_to_storage(){
                  <Input label_v={"نسبة الربح %"} id_v={""}></Input>
                  <Input label_v={"الباركود "} id_v={""}></Input>
                  <Input label_v={"الصنف "} id_v={""}></Input>
+
+                 <div className="add_buttons_div">
+                    <Button string={"اضافة"}></Button>
+                    <Button string={"الغاء"}></Button>
+                    <Button string={"محو"}></Button>
+                 </div>
             
 
            </div>
