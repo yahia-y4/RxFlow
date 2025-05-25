@@ -15,21 +15,7 @@
 
 }
 
-.add_inputs_right_div{
-     margin-top: 10px;
-     display: flex;
-     justify-content: center;
-     align-items: center;
-     flex-direction: column;
-}
 
-.add_inputs_right_div input{
-     height: 20px;
-}
-
-.add_inputs_right_div .input_compon{
-     margin-bottom: 10px;
-}
 
 
 

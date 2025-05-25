@@ -1,0 +1,15 @@
+.Add_item_to_storage_div{
+     margin-top: 10px;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     flex-direction: column;
+}
+
+.Add_item_to_storage_div input{
+     height: 20px;
+}
+
+.Add_item_to_storage_div .input_compon{
+     margin-bottom: 10px;
+}
