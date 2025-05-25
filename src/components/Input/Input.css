@@ -1,13 +1,12 @@
 .input_compon {
-    display:flex;
-     
-     width: fit-content;
-   
-     
+    display: flex;
+    width: fit-content;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .input_compon .input_class {
-
     direction: rtl;
     background-color: #041018;
     border: #bcc9cf 1px solid;
@@ -17,9 +16,9 @@
     
 }
 
-.input_compon .label_class {
-
-    margin-left: 10px;
+.input_compon .label_class {    
     color: #bcc9cf;
-    font-size: 20px;
+    font-size: 16px;
+    display: block;
+
 }
