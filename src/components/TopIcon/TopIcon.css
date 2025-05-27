@@ -1,15 +1,21 @@
-.top_icon_div{
-    font-size: 20px;
-    width: 30px;
-    color: #a8dbdb;
-    border: 1px solid #a8dbdb;
-   text-align: center;
-   padding: 5px;
-   
+.top_icon_div {
+        font-size: 20px;
+        width: 30px;
+        color: #a8dbdb;
+        border-top: 2px solid #a8dbdb;
+        border-left: 2px solid #a8dbdb;
+        border-right: 2px solid #a8dbdb;
+
+        text-align: center;
+        padding: 5px;
+
 }
 
-.top_icon_div :hover{
+.top_icon_div:hover {
         color: #ffffff;
-    
-}
+        border-top: 2px solid #ffffff;
+        border-left: 2px solid #ffffff;
+        border-right: 2px solid #ffffff;
+        background-color: #a8dbdb5d;
 
+}

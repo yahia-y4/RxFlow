@@ -1,9 +1,9 @@
 import React from "react";
 import "./Button.css";
 
-export default function Button({ id_v, string }) {
+export default function Button({ id_v, string , onClick}) {
   return (
-    <div id={id_v} className="button_class">
+    <div onClick={onClick} id={id_v} className="button_class" >
       {string}
     </div>
   );

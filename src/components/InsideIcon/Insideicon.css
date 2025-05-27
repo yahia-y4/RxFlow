@@ -2,7 +2,7 @@
    width: 30px;
    text-align: center;
    padding: 5px;
-    border: 1px solid #a8dbdb;
+    border: 2px solid #a8dbdb;
     font-size: 20px;
     color: #a8dbdb;
     border-radius: 10px;
@@ -10,6 +10,9 @@
    
 }
 
-.inside_icon_div :hover{
+.inside_icon_div:hover{
     color: #ffffff;
+    background-color: #a8dbdb80;
+     border: 2px solid #ffffff;
+   
 }
