@@ -1,7 +1,7 @@
 {
   "name": "rxflow",
   "version": "1.0.0",
-  "main": "main.js",
+  "main": "./electron/main.js",
   "scripts": {
     "start": "electron .",
     "dev": "webpack --watch"
@@ -22,7 +22,12 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.7.2",
+    "bcrypt": "^6.0.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "sequelize": "^6.37.7",
+    "sqlite3": "^5.1.7"
   }
 }
