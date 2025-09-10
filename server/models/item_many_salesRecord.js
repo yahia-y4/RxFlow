@@ -1,20 +1,18 @@
-const {DataTypes} = require('sequelize');
+const { DataTypes } = require('sequelize');
 const sequelize = require('../db.js');
 const Item = require('./item.js');
 const SalesRecord = require('./sales_record.js');
+
 const ItemManySalesRecord = sequelize.define('item_many_salesRecord', {
     itemId: {
         type: DataTypes.INTEGER,    
         allowNull: false,
         references: {
             model: Item,
-
             key: 'id'
         }
     },      
-
     salesRecordId: {        
-
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
@@ -35,12 +33,9 @@ const ItemManySalesRecord = sequelize.define('item_many_salesRecord', {
     indexes: [
         {
             unique: true,
-            fields: ["itemId", "salesRecordId"],
-        },
-    ],
+            fields: ['itemId', 'salesRecordId']  
+        }
+    ]
 });
-
-
-
 
 module.exports = ItemManySalesRecord;

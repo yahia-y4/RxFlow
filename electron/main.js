@@ -1,31 +1,38 @@
-const { app, BrowserWindow } = require('electron');
-const path = require('path');
-const { spawn } = require('child_process');
+const { app, BrowserWindow } = require("electron");
+const path = require("path");
+const { spawn } = require("child_process");
+
 let serverProcess;
+
 function createWindow() {
-  const mainWindow  = new BrowserWindow({
+  const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
-      preload: path.join(__dirname, 'preload.js'),
-    }
+      preload: path.join(__dirname, "preload.js"),
+    },
   });
 
-  mainWindow.loadFile('dist/index.html');
+  mainWindow.loadFile("dist/index.html");
 }
 
 app.whenReady().then(() => {
-  createWindow();
-  serverProcess = spawn('node', [path.join(__dirname, '../server/server.js')], { stdio: 'inherit' });
+  // createWindow();
+
+  if (serverProcess) {
+    serverProcess.kill();
+  }
+
+  // جرب npx nodemon بدل nodemon مباشرة
+  serverProcess = spawn("npx", ["nodemon", path.join(__dirname, "../server/server.js")], {
+    stdio: "inherit",
+    shell: true, // مهم في ويندوز
+  });
 });
 
-
-
-
-
-app.on('quit', () => {
-  console.log('Quitting app, terminating server process...');
+app.on("before-quit", () => {
+  console.log("Quitting app, terminating server process...");
   if (serverProcess) serverProcess.kill();
 });

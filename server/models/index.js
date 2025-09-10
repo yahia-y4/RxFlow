@@ -8,7 +8,6 @@ const payment_received = require('./payment_received');
 const DoctorPrescription = require('./doctor_prescription');
 const Invoice = require('./purchase_Invoice');
 const Add_debt_to_customer = require('./Add_debt_to_customer');
-const session = require('./session');
 const SalesRecord = require('./sales_record');
 const Classify = require('./classify');
 const Notice = require('./notice');
@@ -34,20 +33,19 @@ DoctorPrescription.belongsToMany(Item, { through: ItemManyDoctorPrescription, fo
 Item.belongsToMany(Invoice, { through: ItemManyInvoice, foreignKey: 'itemId' });
 Invoice.belongsToMany(Item, { through: ItemManyInvoice, foreignKey: 'invoiceId' });
 
-Item.belongsToMany(SalesRecord, { through: ItemManySalesRecord, foreignKey: 'itemId' });
-SalesRecord.belongsToMany(Item, { through: ItemManySalesRecord, foreignKey: 'salesRecordId' });
+Item.belongsToMany(SalesRecord, { through: ItemManySalesRecord, foreignKey: 'itemId', otherKey: 'salesRecordId' });
+SalesRecord.belongsToMany(Item, { through: ItemManySalesRecord, foreignKey: 'salesRecordId', otherKey: 'itemId' });
 
 module.exports = {
     User,
     Item,
     warehouse,
-    customer,
+    customer, 
     payment_sent,
     payment_received,
     DoctorPrescription,
     Invoice,
     Add_debt_to_customer,
-    session,
     SalesRecord,
     Classify,
     Notice,

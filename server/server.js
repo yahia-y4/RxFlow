@@ -9,8 +9,9 @@ server.use(express.json());
 
 server.use('/user', Router.userRouter);
 server.use('/items', Router.itemsRouter);
-
-
+server.use('/salesRecords', Router.salesRouter);
+server.use('/warehouse', Router.warehouseRouter);
+server.use('/purchaseInvoice', Router.purchaseInvoiceRouter);
 
 
 
@@ -22,8 +23,9 @@ async function startServer() {
     // تعطيل FK مؤقتًا لتجنب الأخطاء
     await sequelize.query('PRAGMA foreign_keys = OFF');
 
-    // مزامنة الجداول مع الحفاظ على البيانات
-    await sequelize.sync({ alter: true });
+    // await models.Invoice.sync({force:true});
+    // await models.warehouse.sync({force:true});
+    // await sequelize.sync({ alter: true });
 
     // إعادة تفعيل FK
     await sequelize.query('PRAGMA foreign_keys = ON');

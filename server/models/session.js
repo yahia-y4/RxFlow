@@ -22,5 +22,5 @@ const session = sequelize.define('session', {
 });
 User.hasMany(session, { foreignKey: 'userId' });
 session.belongsTo(User, { foreignKey: 'userId' }); 
-module.exports = session;
+
    

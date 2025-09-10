@@ -1,4 +1,7 @@
+
+const  sequelize  = require("../db");
 const { Item } = require("../models");
+const {createSalesRecord} = require("./salesRecordsController");
 
 const createItem = async (req, res) => {
   const userId = req.user.id;
@@ -136,11 +139,40 @@ try {
   res.status(500).json({ error: "Internal server error" });
 }
 };
-
-const sellItems =async(req,res)=>{
+const sellItems = async (req, res) => {
   const userId = req.user.id;
-  const { items } = req.body; // Array of { itemId, sellQuantity }
-}
+  const { items } = req.body;
+
+  const t = await sequelize.transaction();
+
+  try {
+  
+    for (let i of items) {
+      const _item = await Item.findOne({ where: { id: i.id, userId }, transaction: t });
+      if (!_item) throw new Error(`العنصر ${i.id} غير موجود`);
+      if (_item.quantity < i.quantity) throw new Error(`الكمية غير متوفرة للعنصر ${_item.name}`);
+    }
+
+ 
+    await Promise.all(
+      items.map(async i => {
+        const _item = await Item.findOne({ where: { id: i.id, userId }, transaction: t });
+        _item.quantity -= i.quantity;
+        await _item.save({ transaction: t });
+      })
+    );
+
+
+    const salesRecord = await createSalesRecord(userId, items, t);
+
+    await t.commit();
+    return res.status(201).json({ message: "تمت عملية البيع بنجاح", salesRecord });
+  } catch (err) {
+    await t.rollback();
+    console.error(err);
+    return res.status(500).json({ message: err.message || "خطأ في السيرفر" });
+  }
+};
 
 module.exports = {
   createItem,

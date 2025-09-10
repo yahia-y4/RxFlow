@@ -7,7 +7,7 @@ const warehouse = sequelize.define('warehouse', {
         allowNull: false
     },
     phone_number:{
-        type:DataTypes.INTEGER,
+        type:DataTypes.STRING,
         allowNull:false
     },
     location: {
@@ -26,16 +26,7 @@ const warehouse = sequelize.define('warehouse', {
         type:DataTypes.FLOAT,
         allowNull:false
     },
-    create_date:{
-        type:DataTypes.DATE,
-        allowNull:false,
-        defaultValue: DataTypes.NOW
-    },
-    update_date:{
-        type:DataTypes.DATE,
-        allowNull:false,
-        defaultValue: DataTypes.NOW
-    },
+
     isUpdated:{
         type:DataTypes.BOOLEAN,
         allowNull:false,

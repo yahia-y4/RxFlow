@@ -16,6 +16,7 @@
     "electron": "^29.0.0",
     "electron-devtools-installer": "^4.0.0",
     "html-webpack-plugin": "^5.5.0",
+    "nodemon": "^3.1.10",
     "style-loader": "^4.0.0",
     "webpack": "^5.91.0",
     "webpack-cli": "^5.1.4"
