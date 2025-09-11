@@ -26,6 +26,8 @@ async function startServer() {
     // await models.Invoice.sync({force:true});
     // await models.warehouse.sync({force:true});
     // await sequelize.sync({ alter: true });
+    // await models.Invoice.sync({force:true})
+    // await models.ItemManyInvoice.sync({force:true})
 
     // إعادة تفعيل FK
     await sequelize.query('PRAGMA foreign_keys = ON');
