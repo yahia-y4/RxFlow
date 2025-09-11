@@ -134,5 +134,20 @@ const getPaymentSentHistory = async (req, res) => {
         res.status(500).json({ error: "Internal server error", message: error.message });
     }
 }
+const getPaymentSentHistory_one_warehouse = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const { id } = req.params;
+        const payments = await payment_sent.findAll({
+            where: { userId,warehouseId:id },
+       
+         
+        });
+        res.status(200).json(payments);
+    } catch (error) {
+       
+        res.status(500).json({ error: error.message });
+    }
+}
 
-module.exports = { createWarehouse, updateWarehouse, getWarehouses, getWarehouseById, deleteWarehouse, sendPayment, getPaymentSentHistory }
+module.exports = { createWarehouse, updateWarehouse, getWarehouses, getWarehouseById, deleteWarehouse, sendPayment, getPaymentSentHistory,getPaymentSentHistory_one_warehouse }

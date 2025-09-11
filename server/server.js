@@ -30,7 +30,9 @@ async function startServer() {
     // await models.Invoice.sync({force:true})
     // await models.ItemManyInvoice.sync({force:true})
     // await models.payment_sent.sync({force:true})
-    // await models.customer.sync({force:true})
+    // // await models.customer.sync({force:true})
+    // await models.customers_debts.sync({force:true})
+    // await models.payment_received.sync({force:true})
 
     // إعادة تفعيل FK
     await sequelize.query('PRAGMA foreign_keys = ON');

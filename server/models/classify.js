@@ -14,11 +14,6 @@ const classfy = sequelize.define('classify', {
         type:DataTypes.STRING,
         allowNull:false
     },
-    create_date:{
-        type:DataTypes.DATE,
-        allowNull:false,
-        defaultValue: DataTypes.NOW
-    },
     description:{
         type:DataTypes.STRING,
         allowNull:true

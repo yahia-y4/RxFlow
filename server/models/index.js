@@ -11,7 +11,7 @@ const Add_debt_to_customer = require('./Add_debt_to_customer');
 const SalesRecord = require('./sales_record');
 const Classify = require('./classify');
 const Notice = require('./notice');
-
+const customers_debts = require('./customers_debts');
 const ItemManyInvoice = require('./item_many_invoice');
 const ItemManyClassify = require('./item_many_classify');
 const ItemManyDoctorPrescription = require('./item_many_DoctorPrescription');
@@ -52,5 +52,6 @@ module.exports = {
     ItemManyInvoice,
     ItemManyClassify,
     ItemManyDoctorPrescription,
-    ItemManySalesRecord
+    ItemManySalesRecord,
+    customers_debts
 };

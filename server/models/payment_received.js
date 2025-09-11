@@ -1,7 +1,17 @@
 const {DataTypes} = require('sequelize');
 const sequelize = require('../db.js');
 const customer = require('./customer.js');
+const user = require('./user.js');
+
 const Payment_received = sequelize.define('payment_received', {
+userId:{
+    type:DataTypes.INTEGER,
+    allowNull:false,
+    references:{
+        model:user,
+        key:'id'
+    }
+},
     amount:{
         type:DataTypes.FLOAT,
         allowNull:false
@@ -23,8 +33,9 @@ const Payment_received = sequelize.define('payment_received', {
             key:'id'
         }
     }
-});
-
+},{timestamps: false});
+user.hasMany(Payment_received, { foreignKey: 'userId' });
+Payment_received.belongsTo(user, { foreignKey: 'userId' });
 customer.hasMany(Payment_received, { foreignKey: 'customerId' });
 Payment_received.belongsTo(customer, { foreignKey: 'customerId' });
 module.exports = Payment_received;

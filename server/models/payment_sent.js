@@ -33,7 +33,7 @@ const Payment_sent = sequelize.define('payment_sent', {
             key:'id'
         }
     }
-});
+},{timestamps: false});
 warehouse.hasMany(Payment_sent, { foreignKey: 'warehouseId' });
 Payment_sent.belongsTo(warehouse, { foreignKey: 'warehouseId' });
 module.exports = Payment_sent;
