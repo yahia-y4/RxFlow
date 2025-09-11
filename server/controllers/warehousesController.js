@@ -1,4 +1,5 @@
-const { warehouse } = require("../models")
+const { warehouse, payment_sent } = require("../models")
+const sequelize = require("../db");
 
 const createWarehouse = async (req, res) => {
     try {
@@ -72,4 +73,66 @@ const deleteWarehouse = async (req, res) => {
     }
 }
 
-module.exports = { createWarehouse, updateWarehouse, getWarehouses, getWarehouseById, deleteWarehouse }
+const sendPayment = async (req, res) => {
+    const transaction = await sequelize.transaction();
+    try {
+        const userId = req.user.id;
+        const { id } = req.params;
+        const { payable_amount_send,note } = req.body;
+
+        // الحصول على المستودع الحالي
+        const currentWarehouse = await warehouse.findOne({
+            where: { id, userId },
+            transaction
+        });
+
+        if (!currentWarehouse) {
+            throw new Error("Warehouse not found");
+        }
+
+        // تحديث المبلغ المستحق
+        await warehouse.update(
+            { paid_amount: currentWarehouse.paid_amount + payable_amount_send },
+            { where: { id, userId }, transaction }
+        );
+
+        // إنشاء سجل الدفع
+        await payment_sent.create({
+            warehouseId: id,
+            userId,
+            amount: payable_amount_send,
+            note,
+        }, { transaction });
+
+        await transaction.commit();
+        res.status(200).json({ message: "Warehouse updated successfully" });
+
+    } catch (error) {
+        await transaction.rollback();
+        console.error(error);
+        res.status(500).json({ error: "Internal server error", message: error.message });
+    }
+}
+
+const getPaymentSentHistory = async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        const payments = await payment_sent.findAll({
+            where: { userId },
+            include: [
+                {
+                    model: warehouse,
+                    attributes: ["id","name", "warehouse_name","phone_number"]
+                }
+            ],
+         
+        });
+        res.status(200).json(payments);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal server error", message: error.message });
+    }
+}
+
+module.exports = { createWarehouse, updateWarehouse, getWarehouses, getWarehouseById, deleteWarehouse, sendPayment, getPaymentSentHistory }

@@ -12,6 +12,7 @@ server.use('/items', Router.itemsRouter);
 server.use('/salesRecords', Router.salesRouter);
 server.use('/warehouse', Router.warehouseRouter);
 server.use('/purchaseInvoice', Router.purchaseInvoiceRouter);
+server.use('/customer', Router.customerRouter);
 
 
 
@@ -28,6 +29,8 @@ async function startServer() {
     // await sequelize.sync({ alter: true });
     // await models.Invoice.sync({force:true})
     // await models.ItemManyInvoice.sync({force:true})
+    // await models.payment_sent.sync({force:true})
+    // await models.customer.sync({force:true})
 
     // إعادة تفعيل FK
     await sequelize.query('PRAGMA foreign_keys = ON');

@@ -1,8 +1,17 @@
 const {DataTypes} = require('sequelize');
 const sequelize = require('../db.js');
 const warehouse = require('./warehouse.js');
+const user = require('./user.js');
 
 const Payment_sent = sequelize.define('payment_sent', {
+    userId:{
+        type:DataTypes.INTEGER,
+        allowNull:false,
+        references:{
+            model:user,
+            key:'id'
+        }
+    },
     amount:{
         type:DataTypes.FLOAT,
         allowNull:false

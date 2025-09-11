@@ -19,16 +19,6 @@ const customer = sequelize.define('customer', {
         type: DataTypes.DECIMAL(10, 2),  // تغيير من NUMBER إلى DECIMAL
         allowNull: false
     },
-    create_date: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: DataTypes.NOW
-    },
-    update_date: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: DataTypes.NOW
-    },
     isUpdated: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
