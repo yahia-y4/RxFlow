@@ -21,15 +21,11 @@ function createWindow() {
 app.whenReady().then(() => {
   // createWindow();
 
-  if (serverProcess) {
-    serverProcess.kill();
-  }
+  // if (serverProcess) {
+  //   serverProcess.kill();
+  // }
 
-  // جرب npx nodemon بدل nodemon مباشرة
-  serverProcess = spawn("npx", ["nodemon", path.join(__dirname, "../server/server.js")], {
-    stdio: "inherit",
-    shell: true, // مهم في ويندوز
-  });
+serverProcess = spawn('node', [path.join(__dirname, '../server/server.js')], { stdio: 'inherit' });
 });
 
 app.on("before-quit", () => {

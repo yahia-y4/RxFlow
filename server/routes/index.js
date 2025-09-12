@@ -4,6 +4,7 @@ const salesRouter = require('./salesRoute.js');
 const warehouseRouter = require('./warehouseRoute.js');
 const purchaseInvoiceRouter  = require('./purchaseInvoiceRoute.js');
 const customerRouter = require('./customerRoute.js');
+const classifyRouter =require('./classifyRoute.js')
 
 
 
@@ -15,6 +16,7 @@ module.exports = {
   purchaseInvoiceRouter,
   warehouseRouter,
   customerRouter,
+  classifyRouter
 };
 
 
