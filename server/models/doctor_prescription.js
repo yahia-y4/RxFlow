@@ -14,15 +14,7 @@ const doctor_prescription = sequelize.define('doctor_prescription', {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    total_price:{
-        type: DataTypes.FLOAT,
-        allowNull: false
-    },
-    create_date:{
-        type:DataTypes.DATE,
-        allowNull:false,
-        defaultValue: DataTypes.NOW
-    },
+    
     userId:{
         type:DataTypes.INTEGER,
         allowNull:false,

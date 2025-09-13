@@ -14,6 +14,7 @@ server.use('/warehouse', Router.warehouseRouter);
 server.use('/purchaseInvoice', Router.purchaseInvoiceRouter);
 server.use('/customer', Router.customerRouter);
 server.use('/classify', Router.classifyRouter)
+server.use('/doctorPrescription', Router.doctorPrescriptionRouter)
 
 server.get('/',(req,res)=>{
     res.send('hello world')
