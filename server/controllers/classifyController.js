@@ -110,8 +110,8 @@ const classifyId = req.params.id;
 const classify = await Classify.findOne({where:{id:classifyId , userId},include:[
     {
         model:Item,
-       
-            attributes:["id","name","company","form","price","profit"]
+            attributes:["id","name","company","form","price","profit"],
+         
         
     }
 ]})
