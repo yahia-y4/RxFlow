@@ -26,7 +26,8 @@ const createItem = async (req, res) => {
     expiry_date,
   } = req.body;
   try {
-    const newItem = await Item.create({
+  
+  const newItem = await Item.create({
       name,
       company,
       form,
@@ -43,8 +44,14 @@ const createItem = async (req, res) => {
       code,
       expiry_date,
       userId,
+    
+    
     });
-
+if(appSettingsData.Notices_Settings.Add_medication_Notices){
+  const title = "اضافة دواء للمخزون";
+  const content =  "بع للمخزون بنجاح ("+company+") "+name+" تمت اضافة الدواء ";
+  createNotice(userId,title,content)
+}
     res.status(201).json(newItem);
   } catch (error) {
     console.error(error);
