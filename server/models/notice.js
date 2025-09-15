@@ -18,10 +18,10 @@ const Notice = sequelize.define('Notice', {
         type:DataTypes.TEXT,
         allowNull:false
     },
-    create_date:{
-        type:DataTypes.DATE,
+    IsRead:{
+        type:DataTypes.BOOLEAN,
         allowNull:false,
-        defaultValue: DataTypes.NOW
+        defaultValue:false
     }
 });
 Notice.belongsTo(User, { foreignKey: 'userId' });

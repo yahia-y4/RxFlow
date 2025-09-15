@@ -6,6 +6,8 @@ const purchaseInvoiceRouter  = require('./purchaseInvoiceRoute.js');
 const customerRouter = require('./customerRoute.js');
 const classifyRouter =require('./classifyRoute.js')
 const doctorPrescriptionRouter = require('./doctorPrescriptionRoute.js')
+const noticeRouter = require('./noticeRoute.js')
+const appSettingsRouter = require('./appSettingsRoute.js')
 
 
 
@@ -18,7 +20,9 @@ module.exports = {
   warehouseRouter,
   customerRouter,
   classifyRouter,
-  doctorPrescriptionRouter
+  doctorPrescriptionRouter,
+  noticeRouter,
+  appSettingsRouter
 };
 
 

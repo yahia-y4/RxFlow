@@ -15,10 +15,6 @@ form :{
     type: DataTypes.STRING,
     allowNull: false
 },
-form_unit:{
-    type: DataTypes.STRING,
-    allowNull: false
-},
 concent:{
     type: DataTypes.STRING,
     allowNull: false

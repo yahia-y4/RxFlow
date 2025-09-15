@@ -2,6 +2,9 @@
 const  sequelize  = require("../db");
 const { Item } = require("../models");
 const {createSalesRecord} = require("./salesRecordsController");
+const {createNotice} = require('./noticeController.js')
+const {appSettingsData} = require('./appSettingsConroller.js')
+
 
 const createItem = async (req, res) => {
   const userId = req.user.id;
@@ -41,6 +44,7 @@ const createItem = async (req, res) => {
       expiry_date,
       userId,
     });
+
     res.status(201).json(newItem);
   } catch (error) {
     console.error(error);
