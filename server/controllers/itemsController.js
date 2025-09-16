@@ -123,6 +123,11 @@ const delItem = async (req, res) => {
   }
   try {
     await Item.destroy({ where: { id: itemId, userId } });
+    if(appSettingsData.Notices_Settings.Delete_medication_Notices){
+      const title = "حذف دواء من المخزون";
+      const content =  "من المخزون  ("+item.company+") "+item.name+" تم حذف الدواء ";
+      createNotice(userId,title,content)
+    }
     res.status(200).json({ message: "Item deleted successfully" });
   } catch (error) {
     console.error(error);
@@ -162,6 +167,9 @@ const sellItems = async (req, res) => {
       const _item = await Item.findOne({ where: { id: i.id, userId }, transaction: t });
       if (!_item) throw new Error(`العنصر ${i.id} غير موجود`);
       if (_item.quantity < i.quantity) throw new Error(`الكمية غير متوفرة للعنصر ${_item.name}`);
+      if((_item.quantity - i.quantity ) < appSettingsData.Drug_Statistics_Settings.Default_Zero_Quantity){
+        throw new Error(` تم بلوغ الحد المسموح  للعنصر  لا يمكن ان يبقى في المستودع عدد قطع اقل من ${appSettingsData.Drug_Statistics_Settings.Minimum_Stock_Level} راجع الاعدادات لتغيير الحد الادنى`);
+      }
     }
 
  
@@ -170,6 +178,21 @@ const sellItems = async (req, res) => {
         const _item = await Item.findOne({ where: { id: i.id, userId }, transaction: t });
         _item.quantity -= i.quantity;
         await _item.save({ transaction: t });
+        if(appSettingsData.Notices_Settings.Low_Stock_Quantity_Notices){
+          if(_item.quantity <= appSettingsData.Drug_Statistics_Settings.Minimum_Quantity_Level){
+            const title = "نقص المخزون";
+            const content =  "("+_item.company+") "+_item.name+"نقص في عدد القطع للدواء";
+            createNotice(userId,title,content)
+          }
+        }
+        if(appSettingsData.Notices_Settings.Notification_of_reaching_true_zero){
+          if(_item.quantity == 0){
+            const title = "تم الوصول إلى الحد الأدنى";
+            const content =  "("+_item.company+") "+_item.name+" تم وصول الكمية الى صفر للدواء ";
+            createNotice(userId,title,content)
+          }
+        }
+
       })
     );
 
@@ -178,10 +201,10 @@ const sellItems = async (req, res) => {
 
     await t.commit();
     return res.status(201).json({ message: "تمت عملية البيع بنجاح", salesRecord });
-  } catch (err) {
+  } catch (error) {
     await t.rollback();
-    console.error(err);
-    return res.status(500).json({ message: err.message || "خطأ في السيرفر" });
+
+    return res.status(500).json({ error: error.message || "خطأ في السيرفر" });
   }
 };
 

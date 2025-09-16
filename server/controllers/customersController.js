@@ -1,5 +1,7 @@
 const { customer, payment_received, customers_debts } = require("../models");
 const sequelize = require("../db.js");
+const {createNotice} = require('./noticeController.js')
+const {appSettingsData} = require('./appSettingsConroller.js')
 
 const createCustomer = async (req, res) => {
   try {
@@ -12,6 +14,11 @@ const createCustomer = async (req, res) => {
       userId,
       debts: 0,
     });
+    if(appSettingsData.Notices_Settings.Add_customer_Notices){
+      const title = "إضافة زبون";
+      const content = `تم إضافة الزبون ${name} لقائمة الزبائن`;
+      createNotice(userId,title,content)
+    }
     res.status(201).json({
       message: "customer created successfully",
       newCustomer,
@@ -79,12 +86,18 @@ const updateCustomer = async (req, res) => {
         message: "customer not found",
       });
     }
+    const oldName = _customer.name;
     await _customer.update({
       name,
       phone_number,
       location,
       isUpdated: true,
     });
+    if(appSettingsData.Notices_Settings.Update_customer_Notices){
+      const title = "تحديث زبون";
+      const content = `تم تحديث بيانات الزبون ${oldName}`;
+      createNotice(userId,title,content)
+    }
     res.status(200).json({
       message: "customer updated successfully",
       _customer,
@@ -117,6 +130,11 @@ const deleteCustomer = async (req, res) => {
       });
     }
     await _customer.destroy();
+    if(appSettingsData.Notices_Settings.Delete_customer_Notices){
+      const title = "حذف زبون";
+      const content = `تم حذف الزبون ${_customer.name}`;
+      createNotice(userId,title,content)
+    }
     res.status(200).json({
       message: "customer deleted successfully",
     });
@@ -162,7 +180,11 @@ const addDebt = async (req, res) => {
     );
 
     await tt.commit();
-    // إضافة استجابة نجاح
+      if(appSettingsData.Notices_Settings.Add_debt_customer_Notices){
+      const title = "إضافة دين";
+      const content = `تم إضافة دين ${amount} للزبون ${_customer.name}`;
+      createNotice(userId,title,content)
+    }
     res.status(200).json({
       message: "Debt added successfully",
     });
@@ -209,6 +231,11 @@ const ReceivePayment = async (req, res) => {
       }
     );
     await t.commit();
+    if(appSettingsData.Notices_Settings.Receive_payment_customer_Notices){
+      const title = " استلام دفعة";
+      const content = `تم استلام دفعة ${amount} من الزبون  ${_customer.name}`;
+      createNotice(userId,title,content)
+    }
     res.status(200).json({
       message: "payment received successfully",
       _customer,
