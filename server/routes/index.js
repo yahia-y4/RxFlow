@@ -8,6 +8,7 @@ const classifyRouter =require('./classifyRoute.js')
 const doctorPrescriptionRouter = require('./doctorPrescriptionRoute.js')
 const noticeRouter = require('./noticeRoute.js')
 const appSettingsRouter = require('./appSettingsRoute.js')
+const statisticsRouter= require('./statisticsRoute.js')
 
 
 
@@ -22,7 +23,8 @@ module.exports = {
   classifyRouter,
   doctorPrescriptionRouter,
   noticeRouter,
-  appSettingsRouter
+  appSettingsRouter,
+  statisticsRouter
 };
 
 

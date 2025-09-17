@@ -17,6 +17,8 @@ server.use('/classify', Router.classifyRouter)
 server.use('/doctorPrescription', Router.doctorPrescriptionRouter)
 server.use('/notice', Router.noticeRouter)
 server.use('/appSettings', Router.appSettingsRouter)
+server.use('/statistics', Router.statisticsRouter)
+
 
 
 const port = 4000;

@@ -196,7 +196,7 @@ const sellItems = async (req, res) => {
       if (!_item) throw new Error(`العنصر ${i.id} غير موجود`);
       if (_item.quantity < i.quantity) throw new Error(`الكمية غير متوفرة للعنصر ${_item.name}`);
       if((_item.quantity - i.quantity ) < appSettingsData.Drug_Statistics_Settings.Default_Zero_Quantity){
-        throw new Error(` تم بلوغ الحد المسموح  للعنصر  لا يمكن ان يبقى في المستودع عدد قطع اقل من ${appSettingsData.Drug_Statistics_Settings.Minimum_Stock_Level} راجع الاعدادات لتغيير الحد الادنى`);
+        throw new Error(` تم بلوغ الحد المسموح  للعنصر  لا يمكن ان يبقى في المستودع عدد قطع اقل من ${appSettingsData.Drug_Statistics_Settings.Default_Zero_Quantity} راجع الاعدادات لتغيير الحد الادنى`);
       }
     }
 
@@ -208,8 +208,8 @@ const sellItems = async (req, res) => {
        await ItemSalesSummary.increment(
   {
     quantity: i.quantity,
-    sales: sequelize.literal(`${i.quantity} * ${_item.price}`),
-    profit: sequelize.literal(`${i.quantity} * ${_item.profit}`)
+    sales: sequelize.literal(`${i.quantity} * (${_item.price}+( ${_item.price} * ${_item.profit}))`),
+    profit: sequelize.literal(`${i.quantity} * ${_item.price} * ${_item.profit}`)
   },
   {
     where: {

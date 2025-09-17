@@ -1,6 +1,7 @@
 
 const fs = require('fs')
 const path = require('path')
+const {ItemSalesSummary} = require('../models')
 const appSettingsPath = path.join(__dirname, '..', 'config', 'appSettings.json')
 
 let appSettingsData ={}
@@ -164,6 +165,30 @@ const updateAppSettings = async (req,res)=>{
           });
     }
 }
+const calculation_Average_Sales = async (req,res)=>{
+    try{
+        const userId = req.user.id;
+        const itemSalesSummaries = await ItemSalesSummary.findAll({
+            where: {
+                userId,
+            },
+        })
+        let totalSales = 0
+        itemSalesSummaries.forEach(item => {
+            totalSales += item.sales
+        })
+        const averageSales = totalSales / itemSalesSummaries.length
+        appSettingsData.Drug_Statistics_Settings.Average_Sales = averageSales
+        fs.writeFileSync(appSettingsPath,JSON.stringify(appSettingsData))
+        return res.status(200).json({
+            message: "Average Sales updated successfully",
+          })
+    }catch(error){
+        return res.status(500).json({
+            Error: error.message,
+          });
+    }
+}
 
 
 
@@ -171,5 +196,6 @@ module.exports = {
     createAppSettings_file,
     appSettingsData,
     getAppSettings,
-    updateAppSettings
+    updateAppSettings,
+    calculation_Average_Sales
 }
