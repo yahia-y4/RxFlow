@@ -1,6 +1,7 @@
 
 const User = require('./user');
 const Item = require('./item');
+const ItemSalesSummary = require('./ItemSalesSummary');
 const warehouse = require('./warehouse');
 const customer = require('./customer');
 const payment_sent = require('./payment_sent');
@@ -53,5 +54,6 @@ module.exports = {
     ItemManyClassify,
     ItemManyDoctorPrescription,
     ItemManySalesRecord,
-    customers_debts
+    customers_debts,
+    ItemSalesSummary
 };

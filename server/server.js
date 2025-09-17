@@ -18,17 +18,13 @@ server.use('/doctorPrescription', Router.doctorPrescriptionRouter)
 server.use('/notice', Router.noticeRouter)
 server.use('/appSettings', Router.appSettingsRouter)
 
-server.get('/',(req,res)=>{
-    res.send('hello world')
-})
-
 
 const port = 4000;
 
 async function startServer() {
   try {
     await createAppSettings_file();
-
+    // await sequelize.sync({force: true});
     console.log('Database synced successfully!');
 
 
