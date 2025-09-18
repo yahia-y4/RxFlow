@@ -1,57 +1,195 @@
-const {Item,ItemSalesSummary} = require('../models')
-const { Op } = require('sequelize');
-const {appSettingsData} = require('./appSettingsConroller.js')
-const TopSellingBySales = async (req,res) => {
-    try{
+const { Item, ItemSalesSummary } = require('../models')
+const { Op, literal ,fn} = require('sequelize');
+const { appSettingsData } = require('./appSettingsConroller.js')
+const TopSellingBySales = async (req, res) => {
+    try {
         const userId = req.user.id;
         const best_selling = await ItemSalesSummary.findAll({
             where: {
                 userId,
-                sales: {[Op.gt]:appSettingsData.Drug_Statistics_Settings.Average_Sales}
+                sales: { [Op.gt]: appSettingsData.Drug_Statistics_Settings.Average_Sales }
             },
             order: [['sales', 'DESC']],
             limit: appSettingsData.Drug_Statistics_Settings.getting_limit,
         })
         res.json(best_selling)
-    }catch(err){
-        res.status(500).json({error: err.message})
+    } catch (err) {
+        res.status(500).json({ error: err.message })
     }
 }
-const lowSellingBySales = async (req,res) => {
-    try{
+const lowSellingBySales = async (req, res) => {
+    try {
         const userId = req.user.id;
         const best_selling = await ItemSalesSummary.findAll({
             where: {
                 userId,
-                sales: {[Op.lte]:appSettingsData.Drug_Statistics_Settings.Average_Sales}
+                sales: { [Op.lte]: appSettingsData.Drug_Statistics_Settings.Average_Sales }
             },
             order: [['sales', 'ASC']],
             limit: appSettingsData.Drug_Statistics_Settings.getting_limit,
         })
         res.json(best_selling)
-    }catch(err){
-        res.status(500).json({error: err.message})
+    } catch (err) {
+        res.status(500).json({ error: err.message })
     }
 }
-const getAllstatistics_items = async (req,res) => {
-    try{
+const lowQuantity_items = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const low = await Item.findAll({
+            where: {
+                userId,
+                quantity: { [Op.lte]: appSettingsData.Drug_Statistics_Settings.Minimum_Quantity_Level }
+            }, attributes: ['id', 'name', 'company', 'form', 'quantity', 'code']
+        })
+        res.status(200).json(low)
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
+}
+const highQuantity_items = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const high = await Item.findAll({
+            where: {
+                userId,
+                quantity: { [Op.gte]: appSettingsData.Drug_Statistics_Settings.Maximum_Quantity_Level }
+            }, attributes: ['id', 'name', 'company', 'form', 'quantity', 'code']
+        })
+        res.status(200).json(high)
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
+}
+const Default_Zero_Quantity_items = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const items = await Item.findAll({
+            where: {
+                userId,
+                quantity: { [Op.eq]: appSettingsData.Drug_Statistics_Settings.Default_Zero_Quantity }
+            }, attributes: ['id', 'name', 'company', 'form', 'quantity', 'code']
+        })
+        res.status(200).json(items)
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
+}
+const true_Zero_Quantity_items = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const items = await Item.findAll({
+            where: {
+                userId,
+                quantity: { [Op.eq]: 0 }
+            }, attributes: ['id', 'name', 'company', 'form', 'quantity', 'code']
+        })
+        res.status(200).json(items)
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
+}
+const getExpiredItems = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const items = await Item.findAll({
+            where: {
+                userId,
+                expiry_date: { [Op.lte]: new Date() }
+            }, attributes: ['id', 'name', 'company', 'form', 'quantity', 'code', 'expiry_date']
+        })
+        res.status(200).json(items)
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
+}
+const getNearExpiryItems = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const today = new Date();
+        const nextMonth = new Date();
+        nextMonth.setMonth(today.getMonth() + 1);
+
+        const items = await Item.findAll({
+            where: {
+                userId,
+                expiry_date: {
+                    [Op.gt]: today,
+                    [Op.lte]: nextMonth
+                }
+            },
+            attributes: ["id", "name", "company", "form", "quantity", "code", "expiry_date"],
+            order: [["expiry_date", "ASC"]]
+        });
+
+        res.status(200).json(items);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+const getAllstatistics_items = async (req, res) => {
+    try {
         const userId = req.user.id;
         const items = await ItemSalesSummary.findAll({
             order: [['sales', 'DESC']],
             where: {
                 userId,
-            },include:{
+            }, include: {
                 model: Item,
-                attributes: ['name','company','form']
+                attributes: ['name', 'company', 'form']
             }
         })
         res.json(items)
-    }catch(err){
-        res.status(500).json({error: err.message})
+    } catch (err) {
+        res.status(500).json({ error: err.message })
     }
 }
+
+const GeneralStatistics_items = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const [inStorage] = await Item.findAll({
+      where: { userId },
+      attributes: [
+        [fn("SUM", literal("price * quantity")), "total_price_in_storage"],
+        [fn("SUM", literal("profit * quantity * price")), "total_profit_in_storage"],
+        [fn("SUM", literal("quantity")), "total_quantity_in_storage"],
+        [fn("COUNT", literal("id")), "total_items_in_storage"]
+      ],
+      raw: true
+    });
+
+    const [outStorage] = await ItemSalesSummary.findAll({
+      where: { userId },
+      attributes: [
+        [fn("SUM", literal("sales")), "total_out_sell_price"],
+        [fn("SUM", literal("profit")), "total_out_profit"],
+        [fn("SUM", literal("quantity")), "total_out_quantity"]
+      ],
+      raw: true
+    });
+    const total_sell_price_in_storage = ((+inStorage.total_price_in_storage ) + (+inStorage.total_profit_in_storage)) || 0;
+
+    res.status(200).json({
+      ...inStorage,
+      total_sell_price_in_storage,
+      ...outStorage,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
     TopSellingBySales,
     getAllstatistics_items,
-    lowSellingBySales
+    lowSellingBySales,
+    lowQuantity_items,
+    highQuantity_items,
+    Default_Zero_Quantity_items,
+    true_Zero_Quantity_items,
+    getExpiredItems,
+    getNearExpiryItems,
+    GeneralStatistics_items
 }
