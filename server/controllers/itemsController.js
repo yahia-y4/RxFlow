@@ -3,10 +3,11 @@ const  sequelize  = require("../db");
 const { Item ,ItemSalesSummary} = require("../models");
 const {createSalesRecord} = require("./salesRecordsController");
 const {createNotice} = require('./noticeController.js')
-const {appSettingsData} = require('./appSettingsConroller.js')
+const {loadSettings} = require('./appSettingsConroller.js')
 
 
 const createItem = async (req, res) => {
+  const appSettingsData = loadSettings()
   const userId = req.user.id;
   const {
     name,
@@ -138,6 +139,7 @@ const{
 };
 
 const delItem = async (req, res) => {
+  const appSettingsData = loadSettings()
   const itemId = req.params.id;
   const userId = req.user.id;
   const item = await Item.findOne({ where: { id: itemId, userId } });
@@ -184,6 +186,7 @@ try {
 }
 };
 const sellItems = async (req, res) => {
+  const appSettingsData = loadSettings()
   const userId = req.user.id;
   const { items } = req.body;
 

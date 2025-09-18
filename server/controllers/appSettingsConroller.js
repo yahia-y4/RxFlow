@@ -1,12 +1,16 @@
 
 const fs = require('fs')
 const path = require('path')
-const {ItemSalesSummary} = require('../models')
+const {ItemSalesSummary,warehouse} = require('../models')
 const appSettingsPath = path.join(__dirname, '..', 'config', 'appSettings.json')
 
 let appSettingsData ={}
+const loadSettings = ()=>{
+    return  JSON.parse(fs.readFileSync(appSettingsPath))
+}
 try{
-    appSettingsData = JSON.parse(fs.readFileSync(appSettingsPath))
+    appSettingsData = loadSettings()
+    
 }catch(e){
     console.log(e)
 }
@@ -189,13 +193,44 @@ const calculation_Average_Sales = async (req,res)=>{
           });
     }
 }
+const calculation_Receivables_Average = async (req,res)=>{
+    try{
+        const userId = req.user.id;
+        const warehouses = await warehouse.findAll({
+            where: {
+                userId,
+            },
+        })
+        let totalReceivables = 0
+        warehouses.forEach(warehouse => {
+            const R = warehouse.payable_amount - warehouse.paid_amount
+            if(R >= 0){
+                totalReceivables += R
+            }
+        })
+        const averageReceivables = totalReceivables / warehouses.length
+        appSettingsData.Supplier_Statistics_Settings.Receivables_Average = averageReceivables || 0
+        fs.writeFileSync(appSettingsPath,JSON.stringify(appSettingsData))
+        appSettingsData = JSON.parse(fs.readFileSync(appSettingsPath))
+        return res.status(200).json({
+            message: "Receivables Average updated successfully",
+            avg:averageReceivables
+          })
+    }catch(error){
+        return res.status(500).json({
+            Error: error.message,
+          });
+    }
+}
 
 
 
 module.exports = {
+
+    loadSettings,
     createAppSettings_file,
-    appSettingsData,
     getAppSettings,
     updateAppSettings,
-    calculation_Average_Sales
+    calculation_Average_Sales,
+    calculation_Receivables_Average
 }

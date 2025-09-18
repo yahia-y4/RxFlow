@@ -1,8 +1,11 @@
-const { Item, ItemSalesSummary } = require('../models')
-const { Op, literal ,fn} = require('sequelize');
-const { appSettingsData } = require('./appSettingsConroller.js')
+const { Item, ItemSalesSummary ,warehouse} = require('../models')
+const { Op, literal ,fn,where} = require('sequelize');
+const { loadSettings } = require('./appSettingsConroller.js')
+
+// الععناصر
 const TopSellingBySales = async (req, res) => {
     try {
+        const appSettingsData = loadSettings()
         const userId = req.user.id;
         const best_selling = await ItemSalesSummary.findAll({
             where: {
@@ -19,6 +22,7 @@ const TopSellingBySales = async (req, res) => {
 }
 const lowSellingBySales = async (req, res) => {
     try {
+        const appSettingsData = loadSettings()
         const userId = req.user.id;
         const best_selling = await ItemSalesSummary.findAll({
             where: {
@@ -35,6 +39,7 @@ const lowSellingBySales = async (req, res) => {
 }
 const lowQuantity_items = async (req, res) => {
     try {
+        const appSettingsData = loadSettings()
         const userId = req.user.id;
         const low = await Item.findAll({
             where: {
@@ -49,6 +54,7 @@ const lowQuantity_items = async (req, res) => {
 }
 const highQuantity_items = async (req, res) => {
     try {
+        const appSettingsData = loadSettings()
         const userId = req.user.id;
         const high = await Item.findAll({
             where: {
@@ -63,6 +69,7 @@ const highQuantity_items = async (req, res) => {
 }
 const Default_Zero_Quantity_items = async (req, res) => {
     try {
+        const appSettingsData = loadSettings()
         const userId = req.user.id;
         const items = await Item.findAll({
             where: {
@@ -77,6 +84,7 @@ const Default_Zero_Quantity_items = async (req, res) => {
 }
 const true_Zero_Quantity_items = async (req, res) => {
     try {
+       
         const userId = req.user.id;
         const items = await Item.findAll({
             where: {
@@ -144,7 +152,6 @@ const getAllstatistics_items = async (req, res) => {
         res.status(500).json({ error: err.message })
     }
 }
-
 const GeneralStatistics_items = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -181,6 +188,63 @@ const GeneralStatistics_items = async (req, res) => {
   }
 };
 
+// الموردين
+
+const highReceivablesSuppliers = async (req, res) => {
+  try {
+    const appSettingsData = loadSettings()
+    const userId = req.user.id;
+
+    const high = await warehouse.findAll({
+      where: {
+        userId,
+        [Op.and]: where(literal("payable_amount - paid_amount"),{ [Op.gte]: appSettingsData.Supplier_Statistics_Settings.Receivables_Average})
+      },
+      attributes: ['id', 'name','warehouse_name','payable_amount', 'paid_amount']
+    });
+
+    res.status(200).json({high,avg:appSettingsData.Supplier_Statistics_Settings.Receivables_Average});
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+const lowReceivablesSuppliers = async (req, res) => {
+  try {
+    const appSettingsData = loadSettings()
+    const userId = req.user.id;
+
+    const low = await warehouse.findAll({
+      where: {
+        userId,
+        [Op.and]: where(literal("payable_amount - paid_amount"),{ [Op.lte]: appSettingsData.Supplier_Statistics_Settings.Receivables_Average})
+      },
+      attributes: ['id', 'name','warehouse_name','payable_amount', 'paid_amount']
+    });
+
+    res.status(200).json(low);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+const zeroReceivablesSuppliers = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const zero = await warehouse.findAll({
+      where: {
+        userId,
+        [Op.and]: where(literal("payable_amount - paid_amount"),{ [Op.eq]: 0})
+      },
+      attributes: ['id', 'name','warehouse_name','payable_amount', 'paid_amount']
+    });
+
+    res.status(200).json(zero);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
 module.exports = {
     TopSellingBySales,
     getAllstatistics_items,
@@ -191,5 +255,8 @@ module.exports = {
     true_Zero_Quantity_items,
     getExpiredItems,
     getNearExpiryItems,
-    GeneralStatistics_items
+    GeneralStatistics_items,
+    highReceivablesSuppliers,
+    lowReceivablesSuppliers,
+    zeroReceivablesSuppliers
 }

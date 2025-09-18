@@ -26,7 +26,6 @@ const warehouse = sequelize.define('warehouse', {
         type:DataTypes.FLOAT,
         allowNull:false
     },
-
     isUpdated:{
         type:DataTypes.BOOLEAN,
         allowNull:false,

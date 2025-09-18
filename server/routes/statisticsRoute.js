@@ -11,7 +11,10 @@ const {
     true_Zero_Quantity_items,
     getExpiredItems,
     getNearExpiryItems,
-    GeneralStatistics_items
+    GeneralStatistics_items,
+    highReceivablesSuppliers,
+    lowReceivablesSuppliers,
+    zeroReceivablesSuppliers
 
 } = require('../controllers/statisticsController.js')
 statisticsRouter.get('/TopSellingBySales',authMiddleware,TopSellingBySales)
@@ -24,6 +27,9 @@ statisticsRouter.get('/true_Zero_Quantity_items',authMiddleware,true_Zero_Quanti
 statisticsRouter.get('/getExpiredItems',authMiddleware,getExpiredItems)
 statisticsRouter.get('/getNearExpiryItems',authMiddleware,getNearExpiryItems)
 statisticsRouter.get('/GeneralStatistics_items',authMiddleware,GeneralStatistics_items)
+statisticsRouter.get('/highReceivablesSuppliers',authMiddleware,highReceivablesSuppliers)
+statisticsRouter.get('/lowReceivablesSuppliers',authMiddleware,lowReceivablesSuppliers)
+statisticsRouter.get('/zeroReceivablesSuppliers',authMiddleware,zeroReceivablesSuppliers)
 
 
 module.exports = statisticsRouter;

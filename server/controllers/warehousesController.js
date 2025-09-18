@@ -1,10 +1,12 @@
 const { warehouse, payment_sent } = require("../models")
 const sequelize = require("../db");
 const {createNotice} = require('./noticeController.js')
-const {appSettingsData} = require('./appSettingsConroller.js')
+const {loadSettings} = require('./appSettingsConroller.js')
+
 
 const createWarehouse = async (req, res) => {
     try {
+        const appSettingsData = loadSettings()
         const userId = req.user.id;
         const { name, phone_number, location, warehouse_name, payable_amount, paid_amount } = req.body;
         const newWarehouse = await warehouse.create({ name, phone_number, location, warehouse_name, payable_amount, paid_amount, userId });
@@ -23,6 +25,7 @@ const createWarehouse = async (req, res) => {
 
 const updateWarehouse = async (req, res) => {
     try {
+        const appSettingsData = loadSettings()
         const userId = req.user.id;
         const { id } = req.params;
         const { name, phone_number, location, warehouse_name } = req.body;
@@ -76,6 +79,7 @@ const getWarehouseById = async (req, res) => {
 }
 const deleteWarehouse = async (req, res) => {
     try {
+        const appSettingsData = loadSettings()
         const { id } = req.params;
         const userId = req.user.id;
         const _Warehouse = await warehouse.findOne({
@@ -101,6 +105,7 @@ const deleteWarehouse = async (req, res) => {
 const sendPayment = async (req, res) => {
     const transaction = await sequelize.transaction();
     try {
+        const appSettingsData = loadSettings()
         const userId = req.user.id;
         const { id } = req.params;
         const { payable_amount_send,note } = req.body;

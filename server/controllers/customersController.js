@@ -1,10 +1,11 @@
 const { customer, payment_received, customers_debts } = require("../models");
 const sequelize = require("../db.js");
 const {createNotice} = require('./noticeController.js')
-const {appSettingsData} = require('./appSettingsConroller.js')
+const {loadSettings} = require('./appSettingsConroller.js')
 
 const createCustomer = async (req, res) => {
   try {
+    const appSettingsData = loadSettings()
     const userId = req.user.id;
     const { name, phone_number, location } = req.body;
     const newCustomer = await customer.create({
@@ -72,6 +73,7 @@ const getCustomerById = async (req, res) => {
 };
 const updateCustomer = async (req, res) => {
   try {
+    const appSettingsData = loadSettings()
     const userId = req.user.id;
     const id = req.params.id;
     const { name, phone_number, location } = req.body;
@@ -111,6 +113,7 @@ const updateCustomer = async (req, res) => {
 };
 const deleteCustomer = async (req, res) => {
   try {
+    const appSettingsData = loadSettings()
     const userId = req.user.id;
     const id = req.params.id;
     const _customer = await customer.findOne({
@@ -148,6 +151,7 @@ const deleteCustomer = async (req, res) => {
 const addDebt = async (req, res) => {
   const tt = await sequelize.transaction();
   try {
+    const appSettingsData = loadSettings()
     const userId = req.user.id;
     const id = req.params.id;
     const { amount, note } = req.body;
@@ -198,6 +202,7 @@ const addDebt = async (req, res) => {
 const ReceivePayment = async (req, res) => {
   const t = await sequelize.transaction();
   try {
+    const appSettingsData = loadSettings()
     const userId = req.user.id;
     const id = req.params.id;
     const { amount, note } = req.body;
