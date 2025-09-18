@@ -14,7 +14,8 @@ const {
     GeneralStatistics_items,
     highReceivablesSuppliers,
     lowReceivablesSuppliers,
-    zeroReceivablesSuppliers
+    zeroReceivablesSuppliers,
+    GeneralStatistics_Suppliers
 
 } = require('../controllers/statisticsController.js')
 statisticsRouter.get('/TopSellingBySales',authMiddleware,TopSellingBySales)
@@ -30,6 +31,7 @@ statisticsRouter.get('/GeneralStatistics_items',authMiddleware,GeneralStatistics
 statisticsRouter.get('/highReceivablesSuppliers',authMiddleware,highReceivablesSuppliers)
 statisticsRouter.get('/lowReceivablesSuppliers',authMiddleware,lowReceivablesSuppliers)
 statisticsRouter.get('/zeroReceivablesSuppliers',authMiddleware,zeroReceivablesSuppliers)
+statisticsRouter.get('/GeneralStatistics_Suppliers',authMiddleware,GeneralStatistics_Suppliers)
 
 
 module.exports = statisticsRouter;

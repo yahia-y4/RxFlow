@@ -203,10 +203,7 @@ const calculation_Receivables_Average = async (req,res)=>{
         })
         let totalReceivables = 0
         warehouses.forEach(warehouse => {
-            const R = warehouse.payable_amount - warehouse.paid_amount
-            if(R >= 0){
-                totalReceivables += R
-            }
+            totalReceivables += warehouse.payable_amount
         })
         const averageReceivables = totalReceivables / warehouses.length
         appSettingsData.Supplier_Statistics_Settings.Receivables_Average = averageReceivables || 0
@@ -226,7 +223,6 @@ const calculation_Receivables_Average = async (req,res)=>{
 
 
 module.exports = {
-
     loadSettings,
     createAppSettings_file,
     getAppSettings,

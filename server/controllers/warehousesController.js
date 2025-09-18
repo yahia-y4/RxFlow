@@ -8,8 +8,8 @@ const createWarehouse = async (req, res) => {
     try {
         const appSettingsData = loadSettings()
         const userId = req.user.id;
-        const { name, phone_number, location, warehouse_name, payable_amount, paid_amount } = req.body;
-        const newWarehouse = await warehouse.create({ name, phone_number, location, warehouse_name, payable_amount, paid_amount, userId });
+        const { name, phone_number, location, warehouse_name, payable_amount } = req.body;
+        const newWarehouse = await warehouse.create({ name, phone_number, location, warehouse_name, payable_amount, userId });
        
         if(appSettingsData.Notices_Settings.Add_supplier_Notices){
             const title = "اضافة مورد";
@@ -120,9 +120,11 @@ const sendPayment = async (req, res) => {
             throw new Error("Warehouse not found");
         }
 
-        // تحديث المبلغ المستحق
+        if(currentWarehouse.payable_amount < payable_amount_send){
+            throw new Error("Not enough payable_amount");
+        }
         await warehouse.update(
-            { paid_amount: currentWarehouse.paid_amount + payable_amount_send },
+            { payable_amount: currentWarehouse.payable_amount - payable_amount_send },
             { where: { id, userId }, transaction }
         );
 
@@ -184,4 +186,13 @@ const getPaymentSentHistory_one_warehouse = async (req, res) => {
     }
 }
 
-module.exports = { createWarehouse, updateWarehouse, getWarehouses, getWarehouseById, deleteWarehouse, sendPayment, getPaymentSentHistory,getPaymentSentHistory_one_warehouse }
+module.exports = {
+     createWarehouse,
+     updateWarehouse,
+     getWarehouses,
+     getWarehouseById,
+     deleteWarehouse,
+     sendPayment,
+     getPaymentSentHistory,
+     getPaymentSentHistory_one_warehouse 
+    }

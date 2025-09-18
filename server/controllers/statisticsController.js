@@ -1,5 +1,5 @@
 const { Item, ItemSalesSummary ,warehouse} = require('../models')
-const { Op, literal ,fn,where} = require('sequelize');
+const { Op, literal ,fn} = require('sequelize');
 const { loadSettings } = require('./appSettingsConroller.js')
 
 // الععناصر
@@ -198,7 +198,7 @@ const highReceivablesSuppliers = async (req, res) => {
     const high = await warehouse.findAll({
       where: {
         userId,
-        [Op.and]: where(literal("payable_amount - paid_amount"),{ [Op.gte]: appSettingsData.Supplier_Statistics_Settings.Receivables_Average})
+        payable_amount:{ [Op.gte]: appSettingsData.Supplier_Statistics_Settings.Receivables_Average}
       },
       attributes: ['id', 'name','warehouse_name','payable_amount', 'paid_amount']
     });
@@ -216,7 +216,7 @@ const lowReceivablesSuppliers = async (req, res) => {
     const low = await warehouse.findAll({
       where: {
         userId,
-        [Op.and]: where(literal("payable_amount - paid_amount"),{ [Op.lte]: appSettingsData.Supplier_Statistics_Settings.Receivables_Average})
+        payable_amount:{ [Op.lte]: appSettingsData.Supplier_Statistics_Settings.Receivables_Average}
       },
       attributes: ['id', 'name','warehouse_name','payable_amount', 'paid_amount']
     });
@@ -233,7 +233,7 @@ const zeroReceivablesSuppliers = async (req, res) => {
     const zero = await warehouse.findAll({
       where: {
         userId,
-        [Op.and]: where(literal("payable_amount - paid_amount"),{ [Op.eq]: 0})
+        payable_amount:{ [Op.eq]: 0}
       },
       attributes: ['id', 'name','warehouse_name','payable_amount', 'paid_amount']
     });
@@ -243,6 +243,25 @@ const zeroReceivablesSuppliers = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+const GeneralStatistics_Suppliers= async(req,res)=>{
+    try {
+        const userId = req.user.id;
+        const total_payable_amount = await warehouse.sum('payable_amount',{where:{userId}})
+        const total_count_Suppliers = await warehouse.count({where:{userId}})
+        const count_Suppliers_with_payable_amount = await warehouse.count({where:{userId,payable_amount:{[Op.gt]:0}}})
+        const count_Suppliers_without_payable_amount = total_count_Suppliers - count_Suppliers_with_payable_amount
+
+        res.status(200).json({
+            total_payable_amount,
+            total_count_Suppliers,
+            count_Suppliers_with_payable_amount,
+            count_Suppliers_without_payable_amount
+        })
+    }catch(error){
+        res.status(500).json({ error: error.message });
+    }
+}
 
 
 module.exports = {
@@ -258,5 +277,6 @@ module.exports = {
     GeneralStatistics_items,
     highReceivablesSuppliers,
     lowReceivablesSuppliers,
-    zeroReceivablesSuppliers
+    zeroReceivablesSuppliers,
+    GeneralStatistics_Suppliers
 }
