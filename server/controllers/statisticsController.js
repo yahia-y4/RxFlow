@@ -1,4 +1,4 @@
-const { Item, ItemSalesSummary ,warehouse} = require('../models')
+const { Item, ItemSalesSummary ,warehouse,customer} = require('../models')
 const { Op, literal ,fn} = require('sequelize');
 const { loadSettings } = require('./appSettingsConroller.js')
 
@@ -263,6 +263,92 @@ const GeneralStatistics_Suppliers= async(req,res)=>{
     }
 }
 
+const highDebtsCustomers = async (req, res) => {
+  try {
+    const appSettingsData = loadSettings()
+    const userId = req.user.id;
+
+    const high = await customer.findAll({
+      where: {
+        userId,
+        debts:{ [Op.gte]: appSettingsData.Customer_Settings.Debts_Average}
+      },
+      attributes: ['id', 'name','phone_number','debts']
+    });
+    if (!high || high.length === 0) {
+      return res.status(400).json({
+        Error: "No high debts customers found",
+      })
+    }
+
+    res.status(200).json({high,avg:appSettingsData.Customer_Settings.Debts_Average});
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+const lowDebtsCustomers = async (req, res) => {
+  try {
+    const appSettingsData = loadSettings()
+    const userId = req.user.id;
+
+    const low = await customer.findAll({
+      where: {
+        userId,
+        debts:{ [Op.lte]: appSettingsData.Customer_Settings.Debts_Average}
+      },
+      attributes: ['id', 'name','phone_number','debts']
+    });
+    if (!low || low.length === 0) {
+      return res.status(400).json({
+        Error: "No low debts customers found",
+      })
+    }
+
+    res.status(200).json({low,avg:appSettingsData.Customer_Settings.Debts_Average});
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+const zeroDebtsCustomers = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const zero = await customer.findAll({
+      where: {
+        userId,
+        debts:{ [Op.eq]: 0}
+      },
+      attributes: ['id', 'name','phone_number','debts']
+    });
+    if (!zero || zero.length === 0) {
+      return res.status(400).json({
+        Error: "No zero debts customers found",
+      })
+    }
+
+    res.status(200).json(zero);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+const GeneralStatistics_Customers= async(req,res)=>{
+    try {
+        const userId = req.user.id;
+        const total_debts = await customer.sum('debts',{where:{userId}})
+        const total_count_Customers = await customer.count({where:{userId}})
+        const count_Customers_with_debts = await customer.count({where:{userId,debts:{[Op.gt]:0}}})
+        const count_Customers_without_debts = total_count_Customers - count_Customers_with_debts
+
+        res.status(200).json({
+            total_debts,
+            total_count_Customers,
+            count_Customers_with_debts,
+            count_Customers_without_debts
+        })
+    }catch(error){
+        res.status(500).json({ error: error.message });
+    }
+}
 
 module.exports = {
     TopSellingBySales,
@@ -278,5 +364,9 @@ module.exports = {
     highReceivablesSuppliers,
     lowReceivablesSuppliers,
     zeroReceivablesSuppliers,
-    GeneralStatistics_Suppliers
+    GeneralStatistics_Suppliers,
+    highDebtsCustomers,
+    lowDebtsCustomers,
+    zeroDebtsCustomers,
+    GeneralStatistics_Customers
 }
