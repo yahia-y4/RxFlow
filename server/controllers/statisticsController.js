@@ -350,6 +350,33 @@ const GeneralStatistics_Customers= async(req,res)=>{
     }
 }
 
+const GeneralStatistics = async(req,res)=>{
+ 
+    try {
+
+      const userId = req.user.id;
+      const total_profit = await ItemSalesSummary.sum('profit',{where:{userId}}) || 0
+      const total_payable_amount = await warehouse.sum('payable_amount',{where:{userId}}) || 0
+      const total_debts = await customer.sum('debts',{where:{userId}}) || 0
+      const profit_with_payable_amount = total_profit  - total_payable_amount
+      const profit_with_debts = total_profit + total_debts
+      const final_profit = total_profit - total_payable_amount + total_debts
+
+
+      res.status(200).json({
+        total_profit,
+        total_payable_amount,
+        total_debts,
+        profit_with_payable_amount,
+        profit_with_debts,
+        final_profit
+      })
+    }catch(error){
+      res.status(500).json({ error: error.message });
+    }
+  
+}
+
 module.exports = {
     TopSellingBySales,
     getAllstatistics_items,
@@ -368,5 +395,6 @@ module.exports = {
     highDebtsCustomers,
     lowDebtsCustomers,
     zeroDebtsCustomers,
-    GeneralStatistics_Customers
+    GeneralStatistics_Customers,
+    GeneralStatistics
 }

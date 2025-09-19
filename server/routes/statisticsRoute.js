@@ -19,7 +19,8 @@ const {
     highDebtsCustomers,
     lowDebtsCustomers,
     zeroDebtsCustomers,
-    GeneralStatistics_Customers
+    GeneralStatistics_Customers,
+    GeneralStatistics
 
 } = require('../controllers/statisticsController.js')
 statisticsRouter.get('/TopSellingBySales',authMiddleware,TopSellingBySales)
@@ -40,6 +41,8 @@ statisticsRouter.get('/highDebtsCustomers',authMiddleware,highDebtsCustomers)
 statisticsRouter.get('/lowDebtsCustomers',authMiddleware,lowDebtsCustomers)
 statisticsRouter.get('/zeroDebtsCustomers',authMiddleware,zeroDebtsCustomers)
 statisticsRouter.get('/GeneralStatistics_Customers',authMiddleware,GeneralStatistics_Customers)
+statisticsRouter.get('/GeneralStatistics',authMiddleware,GeneralStatistics)
+
 
 
 module.exports = statisticsRouter;
