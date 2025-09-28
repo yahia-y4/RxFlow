@@ -7,10 +7,12 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
+    clean: true, // يمسح dist قبل كل build
   },
   resolve: {
     extensions: ['.js', '.jsx'],
   },
+  devtool: 'inline-source-map',
   module: {
     rules: [
       {
@@ -23,7 +25,7 @@ module.exports = {
         use: ['style-loader', 'css-loader'],
       },
       {
-        test: /\.(woff|woff2|eot|ttf|otf)$/,
+        test: /\.(woff|woff2|eot|ttf|otf)$/i,
         type: 'asset/resource',
         generator: {
           filename: 'webfonts/[name][ext]',
@@ -31,6 +33,14 @@ module.exports = {
       },
     ],
   },
+  devServer: {
+  static: path.join(__dirname, 'dist'),
+  compress: true,
+  port: 3000,
+  hot: true,
+  historyApiFallback: true, // مهم للراوتر
+},
+
   plugins: [
     new HtmlWebpackPlugin({
       template: './public/index.html',
@@ -44,5 +54,5 @@ module.exports = {
       ],
     }),
   ],
-  mode: 'development',
+  mode: process.env.NODE_ENV || 'development',
 };

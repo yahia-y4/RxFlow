@@ -92,7 +92,6 @@ export default function Add_item_to_storage() {
         }}
       />
       <Input
-        label_v={"الصنف "}
         input_v={data.class}
         onChange={(event) => {
           setData({ ...data, class: event.target.value });

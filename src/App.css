@@ -4,6 +4,7 @@
 }
 body{
     overflow: hidden;
+    direction: rtl;
 }
 .app_div{
    background-color: #041018;

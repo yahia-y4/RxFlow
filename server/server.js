@@ -20,23 +20,8 @@ server.use('/appSettings', Router.appSettingsRouter)
 server.use('/statistics', Router.statisticsRouter)
 
 
+module.exports = server;
+  
 
-const port = 4000;
-
-async function startServer() {
-  try {
-    await createAppSettings_file();
-    // await sequelize.sync({force: true});
-    console.log('Database synced successfully!');
-
-
-    server.listen(port, () => console.log(`Server running on port ${port}`));
-
-  } catch (err) {
-    console.error('Error syncing database:', err);
-  }
-}
-
-startServer();
 
 

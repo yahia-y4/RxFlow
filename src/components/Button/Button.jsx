@@ -1,10 +1,11 @@
 import React from "react";
 import "./Button.css";
 
-export default function Button({ id_v, string , onClick}) {
+export default function Button({ string , onClick}) {
   return (
-    <div onClick={onClick} id={id_v} className="button_class" >
+    <div onClick={onClick} className="button_class" >
       {string}
     </div>
   );
 }
+

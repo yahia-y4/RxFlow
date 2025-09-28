@@ -1,8 +1,13 @@
 const { app, BrowserWindow } = require("electron");
+const server = require('../server/server.js');
 const path = require("path");
-const { spawn } = require("child_process");
 
-let serverProcess;
+const port = 0; // 0 = بورت عشوائي
+let serverPort;
+let listener;
+
+const preloadPath = path.join(__dirname, "preload.js");
+console.log(preloadPath);
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
@@ -10,25 +15,50 @@ function createWindow() {
     height: 600,
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false,
-      preload: path.join(__dirname, "preload.js"),
+      contextIsolation: true,
+      preload: preloadPath,
     },
   });
 
-  mainWindow.loadFile("dist/index.html");
+  // أرسل البورت للعالم الخارجي بعد أن تفتح النافذة
+  mainWindow.webContents.once('dom-ready', () => {
+    mainWindow.webContents.send('server-port', serverPort);
+  });
+
+  mainWindow.loadURL(`http://localhost:3000`);
+  console.log("Window opened on port 3000");
 }
 
-app.whenReady().then(() => {
-  // createWindow();
+// تحويل createServer إلى Promise
+function createServer() {
+  return new Promise((resolve, reject) => {
+     listener = server.listen(port, () => {
+      serverPort = listener.address().port;
+      console.log(`Server running on port ${serverPort}`);
+      resolve();
+    });
+    listener.on('error', reject);
+  });
+}
 
-  // if (serverProcess) {
-  //   serverProcess.kill();
-  // }
+async function startApp() {
+ try {
+    await createServer(); // حاول تشغيل السيرفر
+    createWindow();       // فقط إذا نجح السيرفر افتح النافذة
+  } catch (error) {
+    console.error("Application will not start because server failed:", error);
+    app.quit();           // أو يمكنك ترك التطبيق مفتوح مع رسالة خطأ
+  }
+}
 
-serverProcess = spawn('node', [path.join(__dirname, '../server/server.js')], { stdio: 'inherit' });
+app.whenReady().then(startApp);
+app.on('before-quit', () => {
+  listener.close(() => {
+    console.log('Server closed');
+  });
 });
-
-app.on("before-quit", () => {
-  console.log("Quitting app, terminating server process...");
-  if (serverProcess) serverProcess.kill();
+app.on('window-all-closed', () => {
+  app.quit(() => {
+    console.log('Application quit');
+  });
 });

@@ -3,6 +3,7 @@
     border: 1px #a8dbdb solid;
     font-size: 16px;
     background-color: #a8dbdb1f;
+    padding: 5px;
 }
 
 .button_class:hover {

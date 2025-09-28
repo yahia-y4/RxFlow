@@ -3,7 +3,7 @@ module.exports = {
     [
       '@babel/preset-react',
       {
-        runtime: 'automatic', // لتفعيل JSX بدون استيراد React
+        runtime: 'automatic', 
       },
     ],
     '@babel/preset-env',
