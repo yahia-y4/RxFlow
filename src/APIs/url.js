@@ -1,5 +1,5 @@
 let baseUrl = null;
-async function getServerUrl() {
+export default async function getServerUrl() {
     if (baseUrl) {
         console.log("baseUrl already set");
         return baseUrl;
@@ -9,11 +9,4 @@ async function getServerUrl() {
   baseUrl = `http://localhost:${port}`;
   return baseUrl;
 }
-
-
-async function adduser() {
-await getServerUrl();
-console.log(baseUrl);
-
-}
-export default adduser;
+ 

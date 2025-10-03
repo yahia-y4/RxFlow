@@ -3,13 +3,13 @@ const {generateToken} = require('../jwt.js')
 
 
  const registerUser = async (req, res) => {
-    const { UserName, Email, Password, Role } = req.body;
+    const { UserName, Email, Password } = req.body;
     try {
-        const newUser = await User.create({ UserName, Email, Password, Role });
+        const newUser = await User.create({ UserName, Email, Password});
         res.status(201).json(newUser);
     } catch (error) {
-        console.error('Error creating user:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        
+        res.status(500).json({ error: error.message });
     }
 }
 
